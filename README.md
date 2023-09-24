@@ -30,9 +30,4 @@ As Vue.js currently adopts a feature branch approach for minor releases[^1], you
 npx install-vue@canary-minor
 ```
 
-## Notes on NPM
-
-If you are using NPM, beware that NPM has a long-standing bug[^2] that running `npm install` with existing `node_modules` or `package-lock.json` won't respect the `overrides` field. You must run `npm install` with a clean slate (i.e. no `node_modules` or `package-lock.json`) or `npm update` to make sure the correct version of Vue.js is installed.
-
 [^1]: That is, while we continue fixing bugs in the `main` branch, we are also working on new features in the `minor` branch. The `minor` branch will eventually be merged into the `main` branch when the next minor release is ready.
-[^2]: [bug: overrides property only honored when running install the first time](https://github.com/npm/cli/issues/5850)
