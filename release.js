@@ -50,7 +50,7 @@ for (const tag of releaseTags) {
   const banner = `import { createRequire } from "module";\nconst require = createRequire(import.meta.url);\n`
   // execa automatically escapes the strings, so we don't need extra escaping
   await $`esbuild --bundle index.ts --format=esm --target=node18 --platform=node --define:RELEASE_TAG='${tag}' --banner:js=${banner} --outfile=outfile.mjs`
-  await $`pnpm publish --tag ${tag}`
+  await $`pnpm publish --tag ${tag} --no-git-checks`
   await $`git restore -- .`
 
   s.stop(`Published v${newVersion}-${tag}`)
