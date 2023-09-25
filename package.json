@@ -1,6 +1,6 @@
 {
   "name": "install-vue",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "The easiest way to install Vue.js prereleases",
   "type": "module",
   "exports": {
