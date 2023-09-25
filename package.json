@@ -7,6 +7,9 @@
     ".": "./outfile.mjs"
   },
   "bin": "./outfile.mjs",
+  "files": [
+    "outfile.mjs"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release": "node ./release.js"
