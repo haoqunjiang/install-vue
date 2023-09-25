@@ -30,12 +30,7 @@ function normalizeAnswer<T>(cancellable: T | symbol): T {
 
 // the RELEASE_TAG would be replaced at build time
 declare global {
-  const RELEASE_TAG:
-    | 'canary'
-    | 'canary-minor'
-    | 'alpha'
-    | 'beta'
-    | 'rc'
+  const RELEASE_TAG: 'canary' | 'canary-minor' | 'alpha' | 'beta' | 'rc'
 }
 
 // parse the command-line arguments
@@ -146,12 +141,22 @@ if (pm === 'npm') {
     const corePackageName = RELEASE_TAG.startsWith('canary')
       ? '@vue/canary'
       : 'vue'
+    let distTag: string = RELEASE_TAG
+    if (RELEASE_TAG === 'canary') {
+      distTag = 'latest'
+    } else if (RELEASE_TAG === 'canary-minor') {
+      distTag = 'minor'
+    }
+
+    const s = spinner()
+    s.start(`Checking for the latest ${RELEASE_TAG} version`)
     const { stdout } = await execa(
       'npm',
-      ['info', `${corePackageName}@${RELEASE_TAG}`, 'version', '--json'],
+      ['info', `${corePackageName}@${distTag}`, 'version', '--json'],
       { stdio: 'pipe' },
     )
     targetVersion = JSON.parse(stdout)
+    s.stop(`Found ${RELEASE_TAG} version ${pico.yellow(targetVersion)}`)
   }
 
   let overrides: Record<string, string> = getOverrides(targetVersion)
@@ -188,7 +193,7 @@ if (pm === 'npm') {
   // https://pnpm.io/package_json#pnpmpeerdependencyrulesallowany
   pkg.pnpm.peerDependencyRules ??= {}
   pkg.pnpm.peerDependencyRules.allowAny ??= []
-  pkg.pnpm.peerDependencyRules.allowAny.push("vue")
+  pkg.pnpm.peerDependencyRules.allowAny.push('vue')
 } else if (pm === 'yarn') {
   // https://github.com/yarnpkg/rfcs/blob/master/implemented/0000-selective-versions-resolutions.md
   pkg.resolutions = {
@@ -206,7 +211,11 @@ writeFileSync(
   'utf-8',
 )
 
-log.info(`Updated ${pico.yellow('package.json')} for dependency overrides`)
+log.step(
+  `Updated ${pico.yellow('package.json')} for ${pico.magenta(
+    pm,
+  )} dependency overrides`,
+)
 
 // prompt & run install
 const shouldInstall = normalizeAnswer(
