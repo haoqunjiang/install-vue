@@ -138,7 +138,7 @@ const CORE_VUE_PACKAGES = [
 const toCanaryPackageName = (name: string) =>
   name === 'vue' ? '@vue/canary' : `${name}-canary`
 
-function getOverrides(version?: string): Record<string, string> {
+function getOverrides(version = args.version): Record<string, string> {
   return Object.fromEntries(
     CORE_VUE_PACKAGES.map((name) => {
       const packageName = RELEASE_TAG.startsWith('canary')
