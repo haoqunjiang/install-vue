@@ -6,9 +6,7 @@ import { $ } from 'execa'
 import {
   intro,
   outro,
-  log,
   select,
-  confirm,
   spinner,
   cancel,
   isCancel,
@@ -39,16 +37,24 @@ if (isCancel(newVersion)) {
   process.exit(0)
 }
 
-
-// await $`pnpm version ${newVersion}`
+await $`pnpm version ${newVersion}`
 
 const releaseTags = ['canary', 'canary-minor', 'alpha', 'beta', 'rc']
 for (const tag of releaseTags) {
-  // await $`pnpm version ${newVersion}-${tag} --no-git-tag-version`
-  // await $`esbuild --bundle index.ts --format=esm --target=node18 --platform=node --define:RELEASE_TAG='"${tag}"' --outfile=outfile.mjs`
-  // await $`pnpm publish --tag ${tag}`
-  // reset the branch status
-  // await $`git restore -- .`
+  const s = spinner()
+  s.start(`Publishing v${newVersion}-${tag}`)
+
+  await $`pnpm version ${newVersion}-${tag} --no-git-tag-version`
+
+  // as we rely on some CJS dependencies, we need to use `createRequire` to provide a `require` function for them
+  const banner = `import { createRequire } from "module";\nconst require = createRequire(import.meta.url);\n`
+  // execa automatically escapes the strings, so we don't need extra escaping
+  await $`esbuild --bundle index.ts --format=esm --target=node18 --platform=node --define:RELEASE_TAG='${tag}' --banner:js=${banner} --outfile=outfile.mjs`
+  await $`pnpm publish --tag ${tag}`
+  await $`git restore -- .`
+
+  s.stop(`Published v${newVersion}-${tag}`)
 }
 
-outro('Done!')
+await $`git push origin main --follow-tags`
+outro('Done! Please check the release on GitHub.')
