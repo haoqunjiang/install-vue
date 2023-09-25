@@ -19,12 +19,16 @@ import { execa, ExecaError } from 'execa'
 import pico from 'picocolors'
 
 // normalize the prompt answer and deal with cancel operations
-function normalizeAnswer<T>(cancellable: T | symbol): T {
-  if (isCancel(cancellable)) {
+async function normalizeAnswer<T>(
+  maybeCancelPromise: Promise<T | symbol>,
+): Promise<T> {
+  const maybeCancel = await maybeCancelPromise
+
+  if (isCancel(maybeCancel)) {
     cancel('Operation cancelled.')
     process.exit(0)
   } else {
-    return cancellable
+    return maybeCancel
   }
 }
 
@@ -57,8 +61,8 @@ try {
     log.warn(
       "There are uncommitted changes in the current repository, it's recommended to commit or stash them first.",
     )
-    const shouldProceed = normalizeAnswer(
-      await confirm({
+    const shouldProceed = await normalizeAnswer(
+      confirm({
         message: `Still proceed?`,
         initialValue: false,
       }),
@@ -94,8 +98,8 @@ if (pmCandidates.length === 1) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   pm = pmCandidates[0]!
 } else if (pmCandidates.length > 1) {
-  pm = normalizeAnswer(
-    await select({
+  pm = await normalizeAnswer(
+    select({
       message:
         'More than one lockfile found, please select the package manager you would like to use',
       options: pmCandidates.map((candidate) => ({
@@ -105,8 +109,8 @@ if (pmCandidates.length === 1) {
     }),
   )
 } else {
-  pm = normalizeAnswer(
-    await select({
+  pm = await normalizeAnswer(
+    select({
       message: 'Cannot infer which package manager to use, please select',
       options: SUPPORTED_PACKAGE_MANAGERS.map((candidate) => ({
         value: candidate,
@@ -240,8 +244,8 @@ log.step(
 )
 
 // prompt & run install
-const shouldInstall = normalizeAnswer(
-  await confirm({
+const shouldInstall = await normalizeAnswer(
+  confirm({
     message: `Run ${pico.magenta(
       `${pm} install`,
     )} to install the updated dependencies?`,
