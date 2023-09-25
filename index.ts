@@ -51,6 +51,28 @@ const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf-8'))
 
 intro('Installing Vue.js')
 
+try {
+  const { stdout: gitStatus } = await execa('git', ['status', '--porcelain'])
+  if (gitStatus.trim()) {
+    log.warn(
+      "There are uncommitted changes in the current repository, it's recommended to commit or stash them first.",
+    )
+    const shouldProceed = normalizeAnswer(
+      await confirm({
+        message: `Still proceed?`,
+        initialValue: false,
+      }),
+    )
+
+    if (!shouldProceed) {
+      cancel('Operation cancelled.')
+      process.exit(1)
+    }
+  }
+} catch (e) {
+  // Do nothing if git is not available, or if it's not a git repo
+}
+
 // decide which package manager to use
 const SUPPORTED_PACKAGE_MANAGERS = ['npm', 'pnpm', 'yarn'] as const
 type PackageManager = (typeof SUPPORTED_PACKAGE_MANAGERS)[number]
