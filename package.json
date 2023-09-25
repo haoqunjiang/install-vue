@@ -1,7 +1,7 @@
 {
   "name": "install-vue",
   "version": "0.0.0",
-  "description": "A simple tool to install vue in a project",
+  "description": "The easiest way to install Vue.js prereleases",
   "type": "module",
   "exports": {
     ".": "./outfile.mjs"
