@@ -148,7 +148,7 @@ function getOverrides(version = args.version): Record<string, string> {
       if (RELEASE_TAG === 'canary') {
         return [name, `npm:${packageName}${version ? `@${version}` : ''}`]
       } else if (RELEASE_TAG === 'canary-minor') {
-        return [name, `npm:${packageName}@${version ?? 'minor'}}`]
+        return [name, `npm:${packageName}@${version ?? 'minor'}`]
       } else {
         return [name, `${version ?? RELEASE_TAG}`]
       }
