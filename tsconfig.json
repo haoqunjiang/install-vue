@@ -3,5 +3,9 @@
     "@tsconfig/node18/tsconfig.json",
     "@tsconfig/strictest/tsconfig.json"
   ],
-  "include": ["index.ts"]
+  "include": ["src/**/*.ts"],
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler"
+  }
 }

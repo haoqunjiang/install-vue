@@ -1,33 +1,26 @@
 # install-vue
 
-> Install Vue in your project, with support for pre-release versions.
+> Install Vue.js prereleases, done correctly.
 
 ## Usage
 
-To install a canary version of Vue in your project, run:
+To install the latest edge release of Vue.js (the released artifacts from the latest commit in [vuejs/core#main](https://github.com/vuejs/core/commits/main/)) in your project, run:
 
 ```sh
-npx install-vue@canary
+npx install-vue@edge
 ```
 
-You can replace `canary` with other pre-release version tags, such as `alpha`, `beta`, or `rc`.
+Other tags are also available.
 
-It's also possible to install a specific pre-release version so that you can test for some specific bugs:
+| command                          | description                                                                                                 |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `npx install-vue@edge`           | install the latest commit from the main branch.                                                             |
+| `npx install-vue@pr 12272`       | Install the release from a specific PR (e.g. [#12272](https://github.com/vuejs/core/pull/12272))            |
+| `npx install-vue@commit 664d2e5` | Install the release from a specific commit (e.g. [664d2e5](https://github.com/vuejs/core/runs/32138997733)) |
+| `npx install-vue@alpha`          | Install the latest alpha version from npm.                                                                  |
+| `npx install-vue@beta`           | Install the latest beta version from npm.                                                                   |
+| `npx install-vue@rc`             | Install the latest release candidate version from npm.                                                      |
+| `npx install-vue@version 3.5.3`  | Install a specific Vue.js version from npm.                                                                 |
 
-```sh
-npx install-vue@canary --version 3.20230911.0
-```
-
-Or
-
-```sh
-npx install-vue@beta --version 3.3.0-beta.1
-```
-
-As Vue.js currently adopts a feature branch approach for minor releases[^1], you can also install a canary version for the next minor release:
-
-```sh
-npx install-vue@canary-minor
-```
-
-[^1]: That is, while we continue fixing bugs in the `main` branch, we are also working on new features in the `minor` branch. The `minor` branch will eventually be merged into the `main` branch when the next minor release is ready.
+> [!IMPORTANT]  
+> The `edge`, `commit` and `pr` releases are powered by [pkg.pr.new](https://github.com/stackblitz-labs/pkg.pr.new). The releases will be removed from cloud storage after 6 months, or 30 days without any downloads. So please don't rely on them for production use.

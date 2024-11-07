@@ -1,7 +1,7 @@
 {
   "name": "install-vue",
   "version": "0.0.3",
-  "description": "The easiest way to install Vue.js prereleases",
+  "description": "Install Vue.js prereleases, done correctly",
   "type": "module",
   "exports": {
     ".": "./outfile.mjs"
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sodatea/install-vue.git"
+    "url": "git+https://github.com/haoqunjiang/install-vue.git"
   },
   "keywords": [
     "vue",
@@ -32,7 +32,7 @@
     "@tsconfig/strictest": "^2.0.5",
     "@types/node": "18.19.59",
     "esbuild": "^0.24.0",
-    "execa": "^9.5.0",
+    "execa": "^9.5.1",
     "picocolors": "^1.1.1",
     "prettier": "^3.3.3",
     "semver": "^7.6.3"
@@ -42,6 +42,7 @@
   },
   "prettier": {
     "semi": false,
-    "singleQuote": true
+    "singleQuote": true,
+    "printWidth": 100
   }
 }

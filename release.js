@@ -39,17 +39,17 @@ if (isCancel(newVersion)) {
 
 await $`pnpm version ${newVersion}`
 
-const releaseTags = ['canary', 'canary-minor', 'alpha', 'beta', 'rc']
+const releaseTags = ['edge', 'pr', 'commit', 'alpha', 'beta', 'rc', 'version']
 for (const tag of releaseTags) {
   const s = spinner()
   s.start(`Publishing v${newVersion}-${tag}`)
 
   await $`pnpm version ${newVersion}-${tag} --no-git-tag-version`
 
-  // as we rely on some CJS dependencies, we need to use `createRequire` to provide a `require` function for them
+  // as we rely on some transitive CJS dependencies, we need to use `createRequire` to provide a `require` function for them
   const banner = `import { createRequire } from "module";\nconst require = createRequire(import.meta.url);\n`
   // execa automatically escapes the strings, so we don't need extra escaping
-  await $`esbuild --bundle index.ts --format=esm --target=node18 --platform=node --define:RELEASE_TAG='${tag}' --banner:js=${banner} --outfile=outfile.mjs`
+  await $`esbuild --bundle src/index.ts --format=esm --target=node18 --platform=node --define:RELEASE_TAG='${tag}' --banner:js=${banner} --outfile=outfile.mjs`
   await $`pnpm publish --tag ${tag} --no-git-checks`
   await $`git restore -- .`
 
