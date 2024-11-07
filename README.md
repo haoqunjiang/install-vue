@@ -1,5 +1,3 @@
-# install-vue
-
 > Install Vue.js prereleases, done correctly.
 
 ## Usage
@@ -14,7 +12,7 @@ Other tags are also available.
 
 | command                          | description                                                                                                 |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `npx install-vue@edge`           | install the latest commit from the main branch.                                                             |
+| `npx install-vue@edge`           | Install the latest commit from the main branch.                                                             |
 | `npx install-vue@pr 12272`       | Install the release from a specific PR (e.g. [#12272](https://github.com/vuejs/core/pull/12272))            |
 | `npx install-vue@commit 664d2e5` | Install the release from a specific commit (e.g. [664d2e5](https://github.com/vuejs/core/runs/32138997733)) |
 | `npx install-vue@alpha`          | Install the latest alpha version from npm.                                                                  |
