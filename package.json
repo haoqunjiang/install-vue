@@ -30,7 +30,7 @@
     "@clack/prompts": "^0.7.0",
     "@tsconfig/node18": "^18.2.4",
     "@tsconfig/strictest": "^2.0.5",
-    "@types/node": "18.19.59",
+    "@types/node": "18.19.64",
     "esbuild": "^0.24.0",
     "execa": "^9.5.1",
     "picocolors": "^1.1.1",
