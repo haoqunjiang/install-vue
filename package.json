@@ -27,11 +27,11 @@
   "author": "Haoqun Jiang <npm@haoqun.me>",
   "license": "MIT",
   "devDependencies": {
-    "@clack/prompts": "^0.8.2",
+    "@clack/prompts": "^0.10.0",
     "@tsconfig/node18": "^18.2.4",
     "@tsconfig/strictest": "^2.0.5",
     "@types/node": "18.19.71",
-    "esbuild": "^0.24.2",
+    "esbuild": "^0.25.0",
     "execa": "^9.5.2",
     "picocolors": "^1.1.1",
     "prettier": "^3.4.2",
