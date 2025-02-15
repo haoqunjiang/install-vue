@@ -30,12 +30,12 @@
     "@clack/prompts": "^0.10.0",
     "@tsconfig/node18": "^18.2.4",
     "@tsconfig/strictest": "^2.0.5",
-    "@types/node": "18.19.71",
+    "@types/node": "18.19.76",
     "esbuild": "^0.25.0",
     "execa": "^9.5.2",
     "picocolors": "^1.1.1",
-    "prettier": "^3.4.2",
-    "semver": "^7.6.3"
+    "prettier": "^3.5.1",
+    "semver": "^7.7.1"
   },
   "engines": {
     "node": ">= 18.19.0"
