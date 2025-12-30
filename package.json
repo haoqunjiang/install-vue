@@ -28,7 +28,7 @@
   "license": "MIT",
   "devDependencies": {
     "@clack/prompts": "^0.10.0",
-    "@tsconfig/node18": "^18.2.4",
+    "@tsconfig/node20": "^20.1.0",
     "@tsconfig/strictest": "^2.0.5",
     "@types/node": "18.19.76",
     "esbuild": "^0.25.1",
