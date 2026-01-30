@@ -52,4 +52,5 @@ await $`git push origin main --follow-tags`
 pushSpinner.stop('Pushed to GitHub')
 
 outro(`Done! The release workflow will be triggered automatically.
-Check the GitHub Actions tab for the publishing progress.`)
+Check the GitHub Actions tab for the publishing progress:
+https://github.com/haoqunjiang/install-vue/actions`)
