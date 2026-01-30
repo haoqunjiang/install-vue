@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Extract version from tag
+        id: tag_version
+        run: |
+          TAG=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$TAG" >> $GITHUB_OUTPUT
+          echo "Publishing version: $TAG"
+
+      - name: Publish release tags
+        run: |
+          VERSION=${{ steps.tag_version.outputs.VERSION }}
+          RELEASE_TAGS="edge pr commit alpha beta rc version"
+          
+          for TAG in $RELEASE_TAGS; do
+            echo "Publishing v${VERSION}-${TAG}"
+            
+            # Update version in package.json
+            pnpm version ${VERSION}-${TAG} --no-git-tag-version
+            
+            # Build with esbuild
+            BANNER='import { createRequire } from "module";
+          const require = createRequire(import.meta.url);
+          '
+            pnpm esbuild --bundle src/index.ts --format=esm --target=node18 --platform=node --define:RELEASE_TAG=\"${TAG}\" --banner:js="$BANNER" --outfile=outfile.mjs
+            
+            # Publish to npm with provenance
+            pnpm publish --tag ${TAG} --no-git-checks --access public
+            
+            # Restore changes
+            git restore -- .
+            
+            echo "✓ Published v${VERSION}-${TAG}"
+          done
+
+      - name: Summary
+        run: |
+          echo "## Release Complete 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Published version \`${{ steps.tag_version.outputs.VERSION }}\` with tags:" >> $GITHUB_STEP_SUMMARY
+          echo "- edge, pr, commit, alpha, beta, rc, version" >> $GITHUB_STEP_SUMMARY
