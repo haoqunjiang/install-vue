@@ -30,6 +30,7 @@ const packageJsonPath = resolve(cwd(), './package.json')
 const pkg = await applyOverrides(
   packageManager,
   JSON.parse(readFileSync(packageJsonPath, 'utf-8')),
+  packageJsonPath,
   positionals[0],
 )
 

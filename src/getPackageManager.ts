@@ -11,7 +11,9 @@ import { SUPPORTED_PACKAGE_MANAGERS, type PackageManager } from './constants'
 export default async function getPackageManager() {
   const LOCKFILE_TO_PACKAGE_MANAGER: Record<string, PackageManager> = {
     'pnpm-lock.yaml': 'pnpm',
+    'pnpm-workspace.yaml': 'pnpm',
     'yarn.lock': 'yarn',
+    'bun.lock': 'bun',
     'package-lock.json': 'npm',
     'npm-shrinkwrap.json': 'npm',
   }

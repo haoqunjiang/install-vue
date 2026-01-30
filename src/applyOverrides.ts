@@ -1,4 +1,6 @@
 import { execa } from 'execa'
+import { writeFileSync } from 'node:fs'
+import { resolve, dirname } from 'node:path'
 import pico from 'picocolors'
 import { spinner } from '@clack/prompts'
 
@@ -8,14 +10,16 @@ import generateOverridesMap from './generateOverridesMap'
 export default async function applyOverrides(
   pm: PackageManager,
   pkg: any,
+  packageJsonPath: string,
   versionArgument?: string,
 ) {
-  if (pm === 'npm') {
+  if (pm === 'npm' || pm === 'bun') {
     let exactVersion = versionArgument
 
     // https://github.com/npm/rfcs/blob/main/accepted/0036-overrides.md
     // Must use exact version (won't work without version or with `@latest`)
     // PKG_PR_NEW_TAGS are not affected here, though.
+    // Note: Bun uses the same overrides syntax as npm
     // @ts-expect-error
     if (NPM_DIST_TAGS.includes(RELEASE_TAG) && !exactVersion) {
       let distTag: string = RELEASE_TAG
@@ -29,7 +33,7 @@ export default async function applyOverrides(
       s.stop(`Found ${RELEASE_TAG} version ${pico.yellow(exactVersion)}`)
     }
 
-    let overrides: Record<string, string> = generateOverridesMap(exactVersion)
+    let overrides: Record<string, string> = await generateOverridesMap(exactVersion)
     pkg.overrides = {
       ...pkg.overrides,
       ...overrides,
@@ -44,27 +48,27 @@ export default async function applyOverrides(
       }
     }
   } else if (pm === 'pnpm') {
-    const overrides = generateOverridesMap(versionArgument)
+    const overrides = await generateOverridesMap(versionArgument)
 
-    pkg.pnpm ??= {}
+    // pnpm now recommends putting overrides in pnpm-workspace.yaml
+    // https://pnpm.io/settings#overrides
+    const yamlContent = `overrides:
+${Object.entries(overrides)
+  .map(([key, value]) => `  '${key}': '${value}'`)
+  .join('\n')}
 
-    // https://pnpm.io/package_json#pnpmoverrides
-    // pnpm & npm overrides differs slightly on their abilities: https://github.com/npm/rfcs/pull/129/files#r440478558
-    // so they use different configuration fields
-    pkg.pnpm.overrides = {
-      ...pkg.pnpm.overrides,
-      ...overrides,
-    }
+peerDependencyRules:
+  allowAny:
+    - 'vue'
+`
 
-    // https://pnpm.io/package_json#pnpmpeerdependencyrulesallowany
-    pkg.pnpm.peerDependencyRules ??= {}
-    pkg.pnpm.peerDependencyRules.allowAny ??= []
-    pkg.pnpm.peerDependencyRules.allowAny.push('vue')
+    const workspaceFilePath = resolve(dirname(packageJsonPath), 'pnpm-workspace.yaml')
+    writeFileSync(workspaceFilePath, yamlContent, 'utf-8')
   } else if (pm === 'yarn') {
     // https://github.com/yarnpkg/rfcs/blob/master/implemented/0000-selective-versions-resolutions.md
     pkg.resolutions = {
       ...pkg.resolutions,
-      ...generateOverridesMap(versionArgument),
+      ...(await generateOverridesMap(versionArgument)),
     }
   } else {
     // unreachable

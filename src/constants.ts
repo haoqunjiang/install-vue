@@ -28,5 +28,5 @@ declare global {
     | typeof SPECIFIC_NPM_VERSION
 }
 
-export const SUPPORTED_PACKAGE_MANAGERS = ['npm', 'pnpm', 'yarn'] as const
+export const SUPPORTED_PACKAGE_MANAGERS = ['npm', 'pnpm', 'yarn', 'bun'] as const
 export type PackageManager = ArrayElement<typeof SUPPORTED_PACKAGE_MANAGERS>
