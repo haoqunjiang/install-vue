@@ -25,15 +25,16 @@ export default async function getPackageManager() {
       pmCandidates.push(pmName)
     }
   }
-  if (pmCandidates.length === 1) {
+  const uniquePmCandidates = [...new Set(pmCandidates)]
+  if (uniquePmCandidates.length === 1) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    pm = pmCandidates[0]!
-  } else if (pmCandidates.length > 1) {
+    pm = uniquePmCandidates[0]!
+  } else if (uniquePmCandidates.length > 1) {
     pm = await normalizeAnswer(
       select({
         message:
           'More than one lockfile found, please select the package manager you would like to use',
-        options: pmCandidates.map((candidate) => ({
+        options: uniquePmCandidates.map((candidate) => ({
           value: candidate,
           label: candidate,
         })),
