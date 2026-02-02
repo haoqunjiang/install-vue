@@ -26,17 +26,24 @@ intro('Installing Vue.js')
 await preflightCheck()
 
 const packageManager = await getPackageManager()
-const packageJsonPath = resolve(cwd(), './package.json')
-const pkg = await applyOverrides(
+const workspaceRoot = cwd()
+const packageJsonPath = resolve(workspaceRoot, './package.json')
+
+const { pkg, modifiedFiles } = await applyOverrides(
   packageManager,
   JSON.parse(readFileSync(packageJsonPath, 'utf-8')),
-  packageJsonPath,
+  workspaceRoot,
   positionals[0],
 )
 
-writeFileSync(packageJsonPath, JSON.stringify(pkg, undefined, 2) + '\n', 'utf-8')
+// Write package.json if it was modified
+if (modifiedFiles.includes('package.json')) {
+  writeFileSync(packageJsonPath, JSON.stringify(pkg, undefined, 2) + '\n', 'utf-8')
+}
+
+const fileList = modifiedFiles.map((f) => pico.yellow(f)).join(', ')
 log.step(
-  `Updated ${pico.yellow('package.json')} for ${pico.magenta(packageManager)} dependency overrides`,
+  `Updated ${fileList} for ${pico.magenta(packageManager)} dependency overrides`,
 )
 
 // prompt & run install

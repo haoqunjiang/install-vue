@@ -1,6 +1,6 @@
 import { execa } from 'execa'
 import { writeFileSync } from 'node:fs'
-import { resolve, dirname } from 'node:path'
+import { resolve } from 'node:path'
 import pico from 'picocolors'
 import { spinner } from '@clack/prompts'
 
@@ -10,9 +10,9 @@ import generateOverridesMap from './generateOverridesMap'
 export default async function applyOverrides(
   pm: PackageManager,
   pkg: any,
-  packageJsonPath: string,
+  workspaceRoot: string,
   versionArgument?: string,
-) {
+): Promise<{ pkg: any; modifiedFiles: string[] }> {
   if (pm === 'npm' || pm === 'bun') {
     let exactVersion = versionArgument
 
@@ -47,6 +47,8 @@ export default async function applyOverrides(
         }
       }
     }
+
+    return { pkg, modifiedFiles: ['package.json'] }
   } else if (pm === 'pnpm') {
     const overrides = await generateOverridesMap(versionArgument)
 
@@ -62,17 +64,20 @@ peerDependencyRules:
     - 'vue'
 `
 
-    const workspaceFilePath = resolve(dirname(packageJsonPath), 'pnpm-workspace.yaml')
+    const workspaceFilePath = resolve(workspaceRoot, 'pnpm-workspace.yaml')
     writeFileSync(workspaceFilePath, yamlContent, 'utf-8')
+
+    return { pkg, modifiedFiles: ['pnpm-workspace.yaml'] }
   } else if (pm === 'yarn') {
     // https://github.com/yarnpkg/rfcs/blob/master/implemented/0000-selective-versions-resolutions.md
     pkg.resolutions = {
       ...pkg.resolutions,
       ...(await generateOverridesMap(versionArgument)),
     }
+
+    return { pkg, modifiedFiles: ['package.json'] }
   } else {
     // unreachable
+    throw new Error(`Unsupported package manager: ${pm}`)
   }
-
-  return pkg
 }
