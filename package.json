@@ -31,7 +31,7 @@
     "@tsconfig/node20": "^20.1.8",
     "@tsconfig/strictest": "^2.0.8",
     "@types/node": "^20.14.8",
-    "esbuild": "^0.27.2",
+    "esbuild": "^0.27.3",
     "execa": "^9.6.1",
     "picocolors": "^1.1.1",
     "prettier": "3.8.1",
