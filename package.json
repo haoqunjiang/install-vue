@@ -27,15 +27,15 @@
   "author": "Haoqun Jiang <npm@haoqun.me>",
   "license": "MIT",
   "devDependencies": {
-    "@clack/prompts": "^1.0.0",
-    "@tsconfig/node20": "^20.1.8",
+    "@clack/prompts": "^1.0.1",
+    "@tsconfig/node20": "^20.1.9",
     "@tsconfig/strictest": "^2.0.8",
-    "@types/node": "^20.14.8",
+    "@types/node": "^20.19.33",
     "esbuild": "^0.27.2",
     "execa": "^9.6.1",
     "picocolors": "^1.1.1",
     "prettier": "3.8.1",
-    "semver": "^7.7.3",
+    "semver": "^7.7.4",
     "typescript": "^5.9.3"
   },
   "engines": {
@@ -46,5 +46,5 @@
     "singleQuote": true,
     "printWidth": 100
   },
-  "packageManager": "pnpm@10.28.2"
+  "packageManager": "pnpm@10.29.3"
 }
