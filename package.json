@@ -36,7 +36,7 @@
     "picocolors": "^1.1.1",
     "prettier": "3.8.4",
     "semver": "^7.7.4",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.0"
   },
   "engines": {
     "node": ">= 20.19.0"
