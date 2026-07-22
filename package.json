@@ -34,7 +34,7 @@
     "esbuild": "^0.28.1",
     "execa": "^9.6.1",
     "picocolors": "^1.1.1",
-    "prettier": "3.8.4",
+    "prettier": "3.9.6",
     "semver": "^7.8.5",
     "typescript": "^6.0.0"
   },
